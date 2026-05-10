@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Compare Merge Sort, Quick Sort e Heap Sort ao ordenar arquivos CSV por coluna.">
+    <title>Ordenação de CSV — EDA2</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/carbon-components/css/carbon-components.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <a class="skip-link" href="#conteudo-principal">Ir para o conteúdo</a>
+
+    <div class="bx--grid app-shell">
+        <header class="bx--row app-header-row" role="banner">
+            <div class="bx--col-lg-16">
+                <div class="app-header">
+                    <div class="app-header__brand">
+                        <span class="app-header__badge">EDA2</span>
+                        <div class="app-header__titles">
+                            <h1 class="app-header__title">Ordenação de CSV</h1>
+                            <p class="app-header__subtitle">Compare tempos de execução entre algoritmos de ordenação no mesmo arquivo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main id="conteudo-principal" class="bx--row main-row">
+            <div class="bx--col-lg-10 bx--offset-lg-3 bx--col-md-8 bx--offset-md-0 bx--col-sm-4">
+                <div class="panel panel--upload">
+                    <h2 class="panel__heading">1. Arquivo</h2>
+                    <p class="panel__hint">Envie um CSV com cabeçalho na primeira linha. As colunas aparecem automaticamente abaixo.</p>
+                    <div class="bx--form-item">
+                        <label class="bx--label" for="fileInput">Arquivo CSV</label>
+                        <div class="bx--file file-dropzone">
+                            <input type="file" id="fileInput" class="bx--file-input" accept=".csv,.txt" aria-describedby="fileHelp">
+                            <label for="fileInput" class="bx--file-label file-dropzone__label">
+                                <span class="file-dropzone__text">Selecione ou arraste um arquivo CSV</span>
+                            </label>
+                            <div id="fileInfo" class="bx--file-filename file-dropzone__filename" aria-live="polite"></div>
+                        </div>
+                        <p id="fileHelp" class="field-hint">Linhas vazias no fim do arquivo são ignoradas na ordenação.</p>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2 class="panel__heading">2. Ordenação</h2>
+                    <div class="bx--form-item">
+                        <label class="bx--label" for="coluna">Coluna</label>
+                        <div class="bx--select">
+                            <select id="coluna" class="bx--select-input" aria-describedby="colunaHint">
+                                <option value="0">Carregue um CSV para listar colunas</option>
+                            </select>
+                        </div>
+                        <p id="colunaHint" class="field-hint">Escolha qual coluna será usada como chave de ordenação.</p>
+                    </div>
+
+                    <div class="bx--form-item">
+                        <label class="bx--label" for="tipo">Tipo do valor na coluna</label>
+                        <div class="bx--select">
+                            <select id="tipo" class="bx--select-input">
+                                <option value="str">Texto (string)</option>
+                                <option value="int">Inteiro</option>
+                                <option value="float">Decimal (float)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bx--form-item">
+                        <div class="bx--checkbox">
+                            <input type="checkbox" id="reverso" class="bx--checkbox-input">
+                            <label for="reverso" class="bx--checkbox-label">Ordem decrescente (maior primeiro)</label>
+                        </div>
+                    </div>
+
+                    <fieldset class="bx--form-item algo-fieldset">
+                        <legend class="bx--label algo-fieldset__legend">Algoritmos a comparar</legend>
+                        <div class="bx--checkbox-group algo-grid">
+                            <div class="bx--checkbox">
+                                <input type="checkbox" id="alg_merge" class="bx--checkbox-input" checked>
+                                <label for="alg_merge" class="bx--checkbox-label">Merge Sort</label>
+                            </div>
+                            <div class="bx--checkbox">
+                                <input type="checkbox" id="alg_quick" class="bx--checkbox-input" checked>
+                                <label for="alg_quick" class="bx--checkbox-label">Quick Sort</label>
+                            </div>
+                            <div class="bx--checkbox">
+                                <input type="checkbox" id="alg_heap" class="bx--checkbox-input" checked>
+                                <label for="alg_heap" class="bx--checkbox-label">Heap Sort</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="bx--form-item actions-row">
+                        <button type="button" id="ordenarBtn" class="bx--btn bx--btn--primary btn-ordenar">
+                            Ordenar e medir tempos
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <section id="resultados" class="bx--row results-section" style="display: none;" aria-labelledby="resultados-heading">
+            <div class="bx--col-lg-12 bx--offset-lg-2 bx--col-md-8 bx--offset-md-0">
+                <div class="bx--tile results-tile">
+                    <h2 id="resultados-heading" class="results-tile__title">Resultados</h2>
+                    <p class="results-tile__intro">O destaque verde indica o menor tempo entre os algoritmos selecionados.</p>
+
+                    <div id="temposTable" class="tempos-region" aria-live="polite"></div>
+
+                    <div id="downloads" class="downloads-region"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="toastRegion" class="toast-region" aria-live="assertive" aria-atomic="true"></div>
+
+    <div id="loading" class="bx--loading-overlay loading-overlay" style="display: none;" role="alertdialog" aria-modal="true" aria-labelledby="loadingLabel" aria-busy="true">
+        <span id="loadingLabel" class="visually-hidden">Processando ordenação, aguarde.</span>
+        <div class="bx--loading loading-spinner">
+            <div class="bx--loading__svg">
+                <svg class="spinner-svg" viewBox="0 0 100 100" aria-hidden="true">
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <p class="loading-overlay__text">Ordenando e medindo tempos…</p>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
