@@ -33,7 +33,7 @@ Script em Python para ordenar arquivos CSV por uma coluna-chave usando algoritmo
 ## Acesso Online
 
 O sistema está disponível online em:
-[https://g3-ordenacao.vercel.app](https://g3-ordenacao.vercel.app)
+[https://g3-ordenacao-eda-2-2026-1.vercel.app/](https://g3-ordenacao-eda-2-2026-1.vercel.app/)
 
 
 ## Screenshots
