@@ -11,23 +11,23 @@
 Script em Python para ordenar arquivos CSV por uma coluna-chave usando algoritmos clássicos de ordenação (Merge Sort, Quick Sort e Heap Sort). O projeto permite executar os três algoritmos simultaneamente com uma única flag, comparando seus desempenhos.
 
 ### Funcionalidades:
-- Upload de arquivo CSV
-- Escolha de coluna, tipo e ordem
-- Execução dos 3 algoritmos
-- Download dos arquivos ordenados
-- Comparação de desempenho
-- Relatório de Resumo em JSON
-- Download dos Resultados
+- Upload de arquivo CSV;
+- Escolha de coluna, tipo e ordem;
+- Execução dos 3 algoritmos;
+- Download dos arquivos ordenados;
+- Comparação de desempenho;
+- Relatório de Resumo em JSON;
+- Download dos Resultados.
 
 ## Formato de entrada/saida
-- Entrada: arquivo CSV com cabeçalho obrigatorio.
-- Coluna-chave: informada por nome de coluna.
-- Delimitador padrão: virgula (,).
+- Entrada: arquivo CSV com cabeçalho obrigatorio;
+- Coluna-chave: informada por nome de coluna;
+- Delimitador padrão: virgula (,);
 - Encoding padrao: UTF-8.
 - Saida: gera um novo arquivo para cada algoritmo no formato:
-  - <arquivo>_merge_ordenado.csv
-  - <arquivo>_quick_ordenado.csv
-  - <arquivo>_heap_ordenado.csv
+  - <arquivo>merge_ordenado.csv
+  - <arquivo>quick_ordenado.csv
+  - <arquivo>heap_ordenado.csv
 
 
 ## Acesso Online
@@ -90,7 +90,7 @@ https://youtu.be/
 </div>
 
 <p align="center">
-  <b>Autorer:</b>
+  <b>Autores:</b>
   <a href="https://github.com/rayenealmeida">Rayene Almeida</a> e 
   <a href="https://github.com/enzo-fb">Enzo Fernandes</a>
 </p>
