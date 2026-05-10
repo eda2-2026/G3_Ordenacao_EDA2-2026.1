@@ -1,10 +1,10 @@
 import sys
 import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'backend', 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from ordenacao.csv_io import ler_csv, criar_chave
-from ordenacao.algoritmos import merge_sort, quick_sort, heap_sort
+from csv_io import ler_csv, criar_chave
+from algoritmos import merge_sort, quick_sort, heap_sort
 
 
 #Caminho do CSV

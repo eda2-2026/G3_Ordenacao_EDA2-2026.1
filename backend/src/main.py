@@ -4,8 +4,8 @@ import sys
 import os
 from typing import List, Tuple, Callable, Any
 
-from ordenacao.csv_io import ler_csv, criar_chave, obter_indice_coluna
-from ordenacao.algoritmos import merge_sort, quick_sort, heap_sort
+from csv_io import ler_csv, criar_chave, obter_indice_coluna
+from algoritmos import merge_sort, quick_sort, heap_sort
 
 
 def gerar_nome_arquivo_saida(entrada: str, algoritmo: str, coluna: str, reverso: bool) -> str:

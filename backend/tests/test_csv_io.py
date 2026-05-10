@@ -1,4 +1,4 @@
-from ordenacao.csv_io import criar_chave, criar_conversor, ler_csv, obter_indice_coluna
+from csv_io import criar_chave, criar_conversor, ler_csv, obter_indice_coluna
 
 
 def test_ler_csv_ok(tmp_path):
