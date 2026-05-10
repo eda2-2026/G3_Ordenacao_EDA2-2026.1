@@ -4,12 +4,14 @@ import sys
 import os
 import time
 import logging
+import csv
+import io
 
 # Adicionar path do backend original
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'backend', 'src'))
 
 from algoritmos import merge_sort, quick_sort, heap_sort
-from csv_io import criar_chave
+from csv_io import criar_chave, criar_conversor, obter_indice_coluna
 
 app = Flask(__name__)
 CORS(app)
@@ -40,27 +42,51 @@ def sort_csv():
         if coluna is None:
             return jsonify({'error': 'Coluna não especificada'}), 400
         
-        # Parse CSV
-        linhas = csv_text.strip().split('\n')
+        try:
+            leitor = csv.reader(io.StringIO(csv_text), delimiter=',')
+            linhas = [linha for linha in leitor]
+        except Exception as e:
+            return jsonify({'error': f'Erro ao ler CSV: {str(e)}'}), 400
+
         if not linhas:
             return jsonify({'error': 'Arquivo CSV inválido'}), 400
-            
+
         cabecalho = linhas[0]
-        dados = [linha.split(',') for linha in linhas[1:] if linha.strip()]
+        dados = [linha for linha in linhas[1:] if linha]
         
         if not dados:
             return jsonify({'error': 'Nenhuma linha de dados no CSV'}), 400
         
+        try:
+            if isinstance(coluna, str) and not coluna.isdigit():
+                coluna = obter_indice_coluna(cabecalho, coluna)
+            else:
+                coluna = int(coluna)
+        except (ValueError, TypeError) as e:
+            return jsonify({'error': f'Coluna inválida: {str(e)}'}), 400
+
         # Validar índice da coluna
-        num_colunas = len(dados[0])
+        num_colunas = len(cabecalho)
         if coluna < 0 or coluna >= num_colunas:
             return jsonify({'error': f'Coluna {coluna} inválida. CSV possui {num_colunas} colunas (índices 0-{num_colunas-1})'}), 400
+
+        for i, linha in enumerate(dados):
+            if len(linha) != num_colunas:
+                return jsonify({'error': f'Linha {i + 2} possui {len(linha)} colunas; esperado {num_colunas}.'}), 400
         
-        # Criar função chave
         try:
+            conversor = criar_conversor(tipo)
             chave = criar_chave(coluna, tipo=tipo)
         except ValueError as e:
             return jsonify({'error': f'Erro ao criar chave: {str(e)}'}), 400
+
+        erros = 0
+        for i, linha in enumerate(dados[:5]):
+            try:
+                conversor(linha[coluna])
+            except Exception:
+                erros += 1
+                return jsonify({'error': f'Falha ao converter valor na linha {i + 2}.'}), 400
         
         # Executar algoritmos
         tempos = {}
@@ -73,8 +99,7 @@ def sort_csv():
             dados_copia = [linha[:] for linha in dados]
             
             try:
-                import time as time_module
-                inicio = time_module.perf_counter()
+                inicio = time.perf_counter()
                 
                 if alg == 'merge':
                     resultado = merge_sort(dados_copia, chave=chave, reverso=reverso)
@@ -83,9 +108,13 @@ def sort_csv():
                 elif alg == 'heap':
                     resultado = heap_sort(dados_copia, chave=chave, reverso=reverso)
                 
-                fim = time_module.perf_counter()
+                fim = time.perf_counter()
                 tempos[alg] = fim - inicio
-                arquivos[alg] = cabecalho + '\n' + '\n'.join([','.join(row) for row in resultado])
+                buffer = io.StringIO()
+                escritor = csv.writer(buffer, delimiter=',', lineterminator='\n')
+                escritor.writerow(cabecalho)
+                escritor.writerows(resultado)
+                arquivos[alg] = buffer.getvalue().rstrip('\n')
             except Exception as e:
                 return jsonify({'error': f'Erro ao executar {alg}: {str(e)}'}), 500
         
