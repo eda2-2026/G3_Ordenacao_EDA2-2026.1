@@ -1,6 +1,6 @@
 import pytest
 
-from ordenacao.algoritmos import heap_sort, merge_sort, quick_sort
+from algoritmos import heap_sort, merge_sort, quick_sort
 
 
 @pytest.fixture()
