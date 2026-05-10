@@ -81,11 +81,9 @@ O sistema está disponível online em:
 
 ## Video
 
-https://youtu.be/
-
 <div align="center">
-  <a href="https://youtu.be/">
-    <img src="https://img.youtube.com/vi/.jpg" width="50%">
+  <a href="https://youtu.be/evCLdcm3mNE">
+    <img src="https://img.youtube.com/vi/evCLdcm3mNE/hqdefault.jpg" width="50%" alt="Vídeo no YouTube">
   </a>
 </div>
 
