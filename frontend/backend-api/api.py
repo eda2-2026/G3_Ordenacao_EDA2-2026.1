@@ -7,8 +7,8 @@ import time
 # Adicionar path do backend original
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'backend', 'src'))
 
-from ordenacao.algoritmos import merge_sort, quick_sort, heap_sort
-from ordenacao.csv_io import criar_chave
+from algoritmos import merge_sort, quick_sort, heap_sort
+from csv_io import criar_chave
 
 app = Flask(__name__)
 CORS(app)
